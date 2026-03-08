@@ -1,5 +1,11 @@
 name: Get Session String
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      telegram_code:
+        description: 'اكتب الكود اللي جالك في تليجرام هنا'
+        required: false
+        default: ''
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -12,4 +18,5 @@ jobs:
           TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
           TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
           TELEGRAM_PHONE_NUMBER: ${{ secrets.TELEGRAM_PHONE_NUMBER }}
+          INPUT_CODE: ${{ github.event.inputs.telegram_code }}
         run: python main.py
