@@ -1,22 +1,26 @@
-name: Get Session String
-on:
-  workflow_dispatch:
-    inputs:
-      telegram_code:
-        description: 'اكتب الكود اللي جالك في تليجرام هنا'
-        required: false
-        default: ''
-jobs:
-  run:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Dependencies
-        run: pip install pyrogram tgcrypto
-      - name: Start Generating
-        env:
-          TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
-          TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
-          TELEGRAM_PHONE_NUMBER: ${{ secrets.TELEGRAM_PHONE_NUMBER }}
-          INPUT_CODE: ${{ github.event.inputs.telegram_code }}
-        run: python main.py
+import os
+import asyncio
+from pyrogram import Client
+
+async def main():
+    api_id = os.environ.get("TELEGRAM_API_ID")
+    api_hash = os.environ.get("TELEGRAM_API_HASH")
+    phone = os.environ.get("TELEGRAM_PHONE_NUMBER")
+    
+    client = Client(":memory:", api_id=int(api_id), api_hash=api_hash)
+    await client.connect()
+    
+    try:
+        # طلب الرمز فقط
+        await client.send_code(phone)
+        print("\n" + "="*40)
+        print("تم إرسال الرمز بنجاح!")
+        print("انتظر الرمز على تليجرام، ثم أعطني إياه.")
+        print("="*40 + "\n")
+    except Exception as e:
+        print(f"خطأ: {e}")
+    finally:
+        await client.disconnect()
+
+if __name__ == "__main__":
+    asyncio.run(main())
