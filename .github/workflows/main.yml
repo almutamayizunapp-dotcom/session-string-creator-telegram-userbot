@@ -1,15 +1,16 @@
-name: Send Telegram Code
+name: Generate Final Session
 on: workflow_dispatch
 jobs:
-  send:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Install Pyrogram
         run: pip install pyrogram tgcrypto
-      - name: Request Code
+      - name: Get Session
         env:
           TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
           TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
           TELEGRAM_PHONE_NUMBER: ${{ secrets.TELEGRAM_PHONE_NUMBER }}
+          TELEGRAM_CODE: "53556"
         run: python main.py
